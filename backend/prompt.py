@@ -8,6 +8,6 @@ You are a helpful assistant.
 def get_prompt() -> ChatPromptTemplate:
     return ChatPromptTemplate.from_messages([
         ("system",system_prompt),
-        (MessagesPlaceholder(variable_name=Settings.input_key)),
-        ("human",Settings.input_key)
+        (MessagesPlaceholder(variable_name=Settings.memory_key)),
+        ("human", "{input}")
     ])
