@@ -1,13 +1,13 @@
-from langchain.prompts import ChatPromptTemplate,MessagePlaceholder
-from .settings import Settings
+from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
+from settings import Settings
 
 system_prompt = """
 You are a helpful assistant.
 """
 
 def get_prompt() -> ChatPromptTemplate:
-    return ChatPromptTemplate.from_message([
+    return ChatPromptTemplate.from_messages([
         ("system",system_prompt),
-        (MessagePlaceholder(variable_name=Settings.input_key)),
+        (MessagesPlaceholder(variable_name=Settings.input_key)),
         ("human",Settings.input_key)
     ])

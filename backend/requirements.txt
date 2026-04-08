@@ -6,6 +6,8 @@ requests
 pandas
 langchain
 langchain-community
+langchain-core
+langchain-ollama
 ollama
 chromadb
 beautifulsoup4

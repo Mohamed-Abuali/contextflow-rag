@@ -1,10 +1,11 @@
 import logging
-from venv import logger
-from fastapi import RouterAPI,HTTPException
-from pydantic import BaseModel
-from .chain import build_chat_chain
 
-router = RouterAPI()
+from fastapi import APIRouter,HTTPException
+from pydantic import BaseModel
+from chain import build_chat_chain
+from settings import Settings
+
+router = APIRouter()
 
 logger = logging.getLogger(__name__)
 chat_chain = build_chat_chain()
