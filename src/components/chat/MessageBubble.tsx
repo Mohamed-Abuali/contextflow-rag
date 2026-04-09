@@ -1,0 +1,32 @@
+import React from 'react';
+import { cn } from '@/lib/utils';
+
+interface MessageBubbleProps {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  isStreaming?: boolean;
+}
+
+const MessageBubble: React.FC<MessageBubbleProps> = ({ role, content, timestamp, isStreaming }) => {
+  const isUser = role === 'user';
+
+  return (
+    <div className={cn('flex', isUser ? 'justify-end' : 'justify-start')}>
+      <div
+        className={cn(
+          'max-w-md p-3 rounded-lg glass',
+          isUser ? 'bg-apple-primary/20' : 'bg-apple-surface/80'
+        )}
+      >
+        <p className="text-apple-text">{content}</p>
+        <div className="text-xs text-apple-text-secondary mt-1 text-right">
+          {timestamp.toLocaleTimeString()}
+          {isStreaming && <span className="ml-2 animate-pulse">...</span>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MessageBubble;
