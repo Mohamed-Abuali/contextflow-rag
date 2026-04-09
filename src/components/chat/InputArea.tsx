@@ -36,7 +36,7 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
         id: response.id,
         role: 'assistant',
         content: response.content,
-        timestamp: response.timestamp,
+        timestamp: new Date(response.timestamp).getTime(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {

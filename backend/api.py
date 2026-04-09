@@ -1,7 +1,8 @@
 import logging
-
+import uuid
+from datetime import datetime
 from fastapi import APIRouter,HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from chain import build_chat_chain
 from settings import Settings
 from langchain_core.output_parsers import StrOutputParser
@@ -16,7 +17,9 @@ class RequestModel(BaseModel):
     session_id:str = "default_session"
 
 class ResponseModel(BaseModel):
-    response:str
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    content: str
+    timestamp: int = Field(default_factory=lambda: int(datetime.utcnow().timestamp()))
     session_id:str
 
 
@@ -28,7 +31,7 @@ async def chat_endpoint(request:RequestModel):
             config={f"configurable":{"session_id":request.session_id}}
         )
         result = parser.invoke(response)
-        return ResponseModel(response=result,session_id=request.session_id)
+        return ResponseModel(content=result,session_id=request.session_id)
     except Exception as e:
         logger.error(f"Error in chat_endpoint: {e}")
         raise HTTPException(status_code=500,detail="Internal server error")
