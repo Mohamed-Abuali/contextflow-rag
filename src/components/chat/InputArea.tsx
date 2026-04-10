@@ -109,7 +109,7 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
   }, [message]);
 
   return (
-    <div className={cn('p-4 border-t border-apple-border bg-white/50 backdrop-blur-lg', screenSize === 'desktop' && 'ml-[280px]')}>
+    <div className={cn('p-4   backdrop-blur-lg', screenSize === 'desktop' && 'ml-[280px]')}>
       <div className="relative max-w-4xl mx-auto bg-white rounded-lg shadow-md p-2">
         {selectedFile && (
           <div className="flex items-center justify-between p-2 text-sm">
