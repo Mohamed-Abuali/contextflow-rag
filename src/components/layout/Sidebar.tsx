@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
       )}
     >
       <div className="p-4 flex justify-between items-center border-b border-apple-border">
-        <h1 className="text-lg font-semibold text-apple-text">Apple Chat</h1>
+        <h1 className="text-lg font-semibold text-apple-text">RAG AI Chat</h1>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm">New Chat</Button>
           {screenSize === 'mobile' && (
