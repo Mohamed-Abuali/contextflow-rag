@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useChatSession } from '@/hooks/useChatSession';
@@ -6,6 +6,7 @@ import { sendChatMessage } from '@/lib/api/client';
 import { Message } from '@/types';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
+import { Paperclip, Mic, File, Image as ImageIcon, X } from 'lucide-react';
 
 interface InputAreaProps {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -16,6 +17,7 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
   const [isSending, setIsSending] = useState(false);
   const { sessionId } = useChatSession();
   const screenSize = useResponsive();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = async () => {
     if (message.trim() === '') return;
@@ -47,37 +49,36 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
-  };
+  }, [message]);
 
   return (
-    <div
-      className={cn(
-        'p-4 border-t border-apple-border glass',
-        screenSize === 'desktop' && 'ml-[280px]'
-      )}
-    >
-      <div className="relative max-w-4xl mx-auto">
+    <div className={cn('p-4 border-t border-apple-border bg-white/50 backdrop-blur-lg', screenSize === 'desktop' && 'ml-[280px]')}>
+      <div className="relative max-w-4xl mx-auto bg-white rounded-lg shadow-md p-2">
         <Textarea
+          ref={textareaRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
-          className="pr-20 resize-none bg-transparent border-none focus:ring-0"
+          placeholder="Ask anything, @models, /prompts ..."
+          className="pr-20 resize-none bg-transparent border-none focus:ring-0 text-base"
+          rows={1}
           disabled={isSending}
         />
-        <Button
-          onClick={handleSend}
-          disabled={isSending || message.trim() === ''}
-          className="absolute right-2 top-1/2 -translate-y-1/2"
-          size="sm"
-        >
-          {isSending ? 'Sending...' : 'Send'}
-        </Button>
+        <div className="absolute bottom-2 right-2 flex items-center space-x-2">
+        <Button variant="ghost" size="icon">
+            <Paperclip className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Mic className="h-5 w-5" />
+          </Button>
+          <Button onClick={handleSend} disabled={isSending || message.trim() === ''} className="bg-black text-white rounded-full w-10 h-10">
+            {isSending ? '...' : <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>}
+          </Button>
+        </div>
       </div>
     </div>
   );
