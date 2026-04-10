@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api import router
+from app.api.endpoints.chat import router
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 

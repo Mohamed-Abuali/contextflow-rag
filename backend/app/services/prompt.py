@@ -1,5 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
-from settings import Settings
+from app.core.settings import Settings
 
 system_prompt = """
 You are a helpful assistant.

@@ -1,9 +1,9 @@
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
-from model import init_model
-from prompt import get_prompt
-from memory import  get_session_history
-from settings import Settings
+from app.services.model import init_model
+from app.services.prompt import get_prompt
+from app.memory.memory import get_session_history
+from app.core.settings import Settings
 
 def build_chat_chain() -> RunnableWithMessageHistory:
     prompt = get_prompt()

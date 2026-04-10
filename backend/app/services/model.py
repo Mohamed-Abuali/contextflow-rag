@@ -1,5 +1,5 @@
 from langchain_ollama import OllamaLLM
-from settings import Settings
+from app.core.settings import Settings
 
 
 def init_model() -> OllamaLLM:

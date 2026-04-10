@@ -6,7 +6,7 @@ import { sendChatMessage } from '@/lib/api/client';
 import { Message } from '@/types';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
-import { Paperclip, Mic, File, Image as ImageIcon, X } from 'lucide-react';
+import { Paperclip, Mic, File, Image as ImageIcon, X,Send ,Loader} from 'lucide-react';
 
 interface InputAreaProps {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -75,8 +75,10 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
           <Button variant="ghost" size="icon">
             <Mic className="h-5 w-5" />
           </Button>
-          <Button onClick={handleSend} disabled={isSending || message.trim() === ''} className="bg-black text-white rounded-full w-10 h-10">
-            {isSending ? '...' : <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>}
+          <Button onClick={handleSend} disabled={isSending || message.trim() === ''} className=" group hover:bg-black text-white  w-10 h-10">
+            {isSending ? <Loader className="animate-spin" /> : 
+              <Send className=" text-black group-hover:text-white" />
+         }
           </Button>
         </div>
       </div>

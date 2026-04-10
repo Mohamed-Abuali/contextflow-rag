@@ -3,8 +3,8 @@ import uuid
 from datetime import datetime
 from fastapi import APIRouter,HTTPException
 from pydantic import BaseModel, Field
-from chain import build_chat_chain
-from settings import Settings
+from app.services.chain import build_chat_chain
+from app.core.settings import Settings
 from langchain_core.output_parsers import StrOutputParser
 
 router = APIRouter()
