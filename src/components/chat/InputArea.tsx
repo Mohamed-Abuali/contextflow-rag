@@ -76,7 +76,7 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
             <Mic className="h-5 w-5" />
           </Button>
           <Button onClick={handleSend} disabled={isSending || message.trim() === ''} className=" group hover:bg-black text-white  w-10 h-10">
-            {isSending ? <Loader className="animate-spin" /> : 
+            {isSending ? <Loader className="animate-spin text-black" /> : 
               <Send className=" text-black group-hover:text-white" />
          }
           </Button>
