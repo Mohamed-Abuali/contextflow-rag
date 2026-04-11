@@ -21,6 +21,7 @@ class ResponseModel(BaseModel):
     content: str
     timestamp: int = Field(default_factory=lambda: int(datetime.utcnow().timestamp()))
     session_id:str
+    context_source:list[str] = []
 
 
 @router.post("/chat",response_model=ResponseModel)
@@ -48,8 +49,9 @@ async def chat_endpoint(
             {Settings.input_key: input_message},
             config={"configurable": {"session_id": session_id}},
         )
+        source = [doc.metadata.get("source","unknown") for doc in response.get("context",[])]
         result = parser.invoke(response)
-        return ResponseModel(content=result,session_id=session_id)
+        return ResponseModel(content=result,session_id=session_id,context_source=source)
     except Exception as e:
         logger.error(f"Error in chat_endpoint: {e}")
         raise HTTPException(status_code=500,detail="Internal server error")
