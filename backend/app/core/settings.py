@@ -9,3 +9,4 @@ class Settings():
     embedding_model: str = os.getenv("EMBEDDING_MODEL")
     memory_key: str = "chat_history"
     input_key: str = "input"
+    output_key: str = "answer"

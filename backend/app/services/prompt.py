@@ -11,3 +11,17 @@ def get_prompt() -> ChatPromptTemplate:
         (MessagesPlaceholder(variable_name=Settings.memory_key)),
         ("human", "{input}")
     ])
+
+
+def get_contextualize_q_prompt() -> ChatPromptTemplate:
+    return ChatPromptTemplate.from_messages([
+        ("system", "Given a chat history and the latest user question which might reference context in the chat history, formulate a standalone question which can be understood without the chat history. Do NOT answer the question, just reformulate it if needed and otherwise return it as is."),
+        MessagesPlaceholder("chat_history"),
+        ("human", "{input}"),
+    ])
+def get_qa_prompt() -> ChatPromptTemplate:
+    return ChatPromptTemplate.from_messages([
+        ("system", "You are a helpful assistant. Use the following retrieved context to answer the question. If the context doesn't contain the answer, say so.\n\nContext:\n{context}"),
+        MessagesPlaceholder("chat_history"),
+        ("human", "{input}"),
+    ])
