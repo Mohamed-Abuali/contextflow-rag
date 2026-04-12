@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useChatSession } from '@/hooks/useChatSession';
-import { sendChatMessage } from '@/lib/api/client';
+import { uploadFile, sendChatMessage } from '@/lib/api/client';
 import { Message } from '@/types';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
@@ -56,7 +56,20 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
 
     setIsSending(true);
     if (selectedFile) {
-      setIsUploading(true);
+      try {
+        setIsUploading(true);
+        const uploadResponse = await uploadFile(selectedFile);
+        // You might want to include the file URL or ID in the message
+        // For example: message = `${message} (Uploaded file: ${uploadResponse.file_url})`
+      } catch (error) {
+        console.error('Failed to upload file:', error);
+        // Handle error state in UI
+        setIsSending(false);
+        setIsUploading(false);
+        return;
+      } finally {
+        setIsUploading(false);
+      }
     }
 
     const userMessage: Message = {
@@ -72,13 +85,6 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
       const response = await sendChatMessage(
         message,
         sessionId,
-        selectedFile || undefined,
-        (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setUploadProgress(percentCompleted);
-        }
       );
       const assistantMessage: Message = {
         id: response.id,

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import config from '@/lib/config';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const SettingsPage: React.FC = () => {
   const [settings, setSettings] = useState<any>(null);
@@ -9,7 +10,7 @@ const SettingsPage: React.FC = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await axios.get('/api/settings');
+        const response = await axios.get(`${config.API_BASE}/settings`);
         setSettings(response.data);
       } catch (err) {
         setError('Failed to fetch settings');
@@ -34,7 +35,7 @@ const SettingsPage: React.FC = () => {
 
   const handleSaveChanges = async () => {
     try {
-      await axios.post('http://127.0.0.1:8000/settings', settings);
+      await axios.post(`${config.API_BASE}/settings`, settings);
       alert('Settings saved successfully!');
     } catch (err) {
       alert(`Failed to save settings ${err}`);

@@ -28,24 +28,12 @@ class ResponseModel(BaseModel):
 async def chat_endpoint(
     message: str = Form(...),
     session_id: str = Form("default_session"),
-    document: Optional[UploadFile] = File(None),
 ):
     try:
         input_message = message
-        if document:
-            if document.filename and document.filename.split(".")[-1] not in ["pdf","docx","txt"]:
-                raise HTTPException(status_code=400,detail="Invalid document type")
-            
-            document_content = await document.read()
-            
-            blob = Blob(data=document_content)
-            documents = extract_text_from_pdf(blob)
-            document_text = "\n".join([doc.page_content for doc in documents])
 
-            if document_text:
-                input_message = f"{input_message}\n\n--- Document Content ---\n{document_text}"
 
-        response = chat_chain.invoke(
+        response = await chat_chain.ainvoke(
             {Settings.input_key: input_message},
             config={"configurable": {"session_id": session_id}},
         )

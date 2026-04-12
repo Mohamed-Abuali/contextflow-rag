@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.api.endpoints.chat import router as chat_router
 from app.api.endpoints.settings import router as settings_router
+from app.api.endpoints.upload import router as upload_router
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
@@ -20,6 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(chat_router)
+app.include_router(upload_router)
 app.include_router(settings_router)
 
 @app.get("/")

@@ -1,25 +1,35 @@
 import axios from 'axios';
+import config from '@/lib/config';
 
-const API_BASE = 'http://127.0.0.1:8000';
+export const uploadFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await axios.post(`${config.API_BASE}${config.UPLOAD_ENDPOINT}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  if (response.status !== 200) {
+    throw new Error('File upload failed');
+  }
+
+  return response.data;
+};
 
 export const sendChatMessage = async (
   message: string,
   sessionId: string,
-  file?: File,
-  onUploadProgress?: (progressEvent: any) => void
 ) => {
   const formData = new FormData();
   formData.append('message', message);
   formData.append('session_id', sessionId);
-  if (file) {
-    formData.append('document', file);
-  }
 
-  const response = await axios.post(`${API_BASE}/chat`, formData, {
+  const response = await axios.post(`${config.API_BASE}/chat`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    onUploadProgress,
   });
 
   if (response.status !== 200) {

@@ -1,7 +1,7 @@
 import os
 from langchain_chroma import Chroma
 from embedding import get_embeddings
-
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 vector_store_path = os.path.join(os.path.dirname(__file__),"app/data/vector_store")
 
 def get_vector_store() -> Chroma | None:
@@ -13,7 +13,7 @@ def get_vector_store() -> Chroma | None:
     )
 
 def create_vector_store(document,chunk_size:int=500,chunk_overlap:int=50):
-    from langchain_text.splitters import RecursiveCharacterTextSplitter
+    
 
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
@@ -21,9 +21,9 @@ def create_vector_store(document,chunk_size:int=500,chunk_overlap:int=50):
         length_function=len,
         is_separator_regex=False,
     )
-    chunks - splitter.split_document(document)
-    return chroma.from_document(
-        document=chunks,
+    chunks = splitter.split_documents(document)
+    return Chroma.from_documents(
+        documents=chunks,
         embedding=get_embeddings(),
         persist_directory=vector_store_path,
     )
