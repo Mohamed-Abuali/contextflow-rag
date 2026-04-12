@@ -1,9 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
 from app.core.settings import Settings
-
-system_prompt = """
-You are a helpful assistant.
-"""
+from app.core.config import SETTINGS_FILE_PATH
+system_prompt = SETTINGS_FILE_PATH.read_text()
 
 def get_prompt() -> ChatPromptTemplate:
     return ChatPromptTemplate.from_messages([
@@ -21,7 +19,10 @@ def get_contextualize_q_prompt() -> ChatPromptTemplate:
     ])
 def get_qa_prompt() -> ChatPromptTemplate:
     return ChatPromptTemplate.from_messages([
-        ("system", "You are a helpful assistant. Use the following retrieved context to answer the question. If the context doesn't contain the answer, say so.\n\nContext:\n{context}"),
+        ("system", system_prompt + "\n\nContext:\n{context}"),
         MessagesPlaceholder("chat_history"),
         ("human", "{input}"),
     ])
+"""
+"You are a helpful assistant. Use the following retrieved context to answer the question. If the context doesn't contain the answer, say so.
+"""

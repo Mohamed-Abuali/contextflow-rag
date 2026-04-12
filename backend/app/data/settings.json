@@ -1,0 +1,23 @@
+{
+  "profile_id": "prof_01",
+  "name": "Technical Support Agent",
+  "description": "Handles product troubleshooting & API docs",
+  "is_active": true,
+  "personality": "You are a precise, solution-focused assistant...",
+  "tone": "professional",
+  "style": "structured",
+  "guidelines_text": "- Never guess endpoints\n- Always cite version numbers",
+  "guidelines_files": ["safety_v2.pdf"],
+  "enforce_strictly": true,
+  "knowledge_files": ["api_reference.pdf", "troubleshooting.md"],
+  "knowledge_urls": ["https://docs.example.com/v3"],
+  "snippets": ["Known issue: Timeout on /auth after 30s"],
+  "chunk_size": 500,
+  "overlap": 10,
+  "embed_model": "text-embedding-3-small",
+  "retrieval_k": 4,
+  "use_reranker": true,
+  "fallback_mode": "use_base_knowledge",
+  "safety_level": "strict",
+  "llm_model": "gpt-4o"
+}

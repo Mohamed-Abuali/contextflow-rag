@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
-import Sidebar from '@/components/layout/Sidebar';
-import ChatArea from '@/components/layout/ChatArea';
-import InputArea from '@/components/chat/InputArea';
-import { Message } from '@/types';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ChatPage from './pages/ChatPage';
+import SettingsPage from './pages/SettingsPage';
 
 const App: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-
   return (
-    <div className="h-screen w-screen flex">
-      <Sidebar />
-      <div className="flex flex-col flex-1">
-        <ChatArea messages={messages} />
-        <InputArea setMessages={setMessages} />
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<ChatPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+      </Routes>
+    </Router>
   );
 };
 
