@@ -23,15 +23,21 @@ const SettingsPage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setSettings((prev: any) => ({ ...prev, [name]: value }));
+    const target = e.target as HTMLInputElement;
+
+    if (target.type === 'number') {
+        setSettings((prev: any) => ({ ...prev, [name]: parseInt(value, 10) || 0 }));
+    } else {
+        setSettings((prev: any) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSaveChanges = async () => {
     try {
-      await axios.post('/api/settings', settings);
+      await axios.post('http://127.0.0.1:8000/settings', settings);
       alert('Settings saved successfully!');
     } catch (err) {
-      alert('Failed to save settings');
+      alert(`Failed to save settings ${err}`);
     }
   };
   

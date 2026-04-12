@@ -1,7 +1,13 @@
+import json
 from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
 from app.core.settings import Settings
 from app.core.config import SETTINGS_FILE_PATH
-system_prompt = SETTINGS_FILE_PATH.read_text()
+from pathlib import Path
+
+settings_text = Path(SETTINGS_FILE_PATH).read_text()
+settings = json.loads(settings_text)
+
+system_prompt = f"{settings['personality']}\n\n{settings['style']}"
 
 def get_prompt() -> ChatPromptTemplate:
     return ChatPromptTemplate.from_messages([
