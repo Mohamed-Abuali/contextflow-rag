@@ -1,12 +1,12 @@
 import os
 from langchain_chroma import Chroma
-from backend.embedding import get_embeddings
+from embedding import get_embeddings
 
-vector_store_path = os.path.join(os.path.dirname(__file__),"/data/vector_store")
+vector_store_path = os.path.join(os.path.dirname(__file__),"app/data/vector_store")
 
 def get_vector_store() -> Chroma | None:
-    if not os.path.exist(vector_store_path):
-        return None
+    if not os.path.exists(vector_store_path):
+        os.makedirs(vector_store_path)
     return Chroma(
         persist_directory=vector_store_path,
         embedding_function=get_embeddings(),

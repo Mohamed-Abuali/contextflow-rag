@@ -50,7 +50,7 @@ async def chat_endpoint(
             config={"configurable": {"session_id": session_id}},
         )
         source = [doc.metadata.get("source","unknown") for doc in response.get("context",[])]
-        result = parser.invoke(response)
+        result = response.get("answer")
         return ResponseModel(content=result,session_id=session_id,context_source=source)
     except Exception as e:
         logger.error(f"Error in chat_endpoint: {e}")

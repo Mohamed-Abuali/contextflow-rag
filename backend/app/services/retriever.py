@@ -1,6 +1,6 @@
 from store_vector import get_vector_store
 
-def get_retriever() -> Chroma | None:
+def get_retriever():
     vector_store = get_vector_store()
     if not vector_store:
         raise RuntimeError("Vector store not found")

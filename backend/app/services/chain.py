@@ -1,11 +1,12 @@
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain.chains import create_history_aware_retriever,create_retrieval_chain
-from langchain.chain.combine_document import create_stuff_documents_chain
-
+from langchain_classic.chains import create_history_aware_retriever,create_retrieval_chain
+from langchain_classic.chains.combine_documents import (
+    create_stuff_documents_chain,
+)
 
 from app.services.retriever import get_retriever
 from app.services.model import init_model
-from app.services.prompt import get_prompt
+from app.services.prompt import get_prompt,get_contextualize_q_prompt,get_qa_prompt
 from app.memory.memory import get_session_history
 from app.core.settings import Settings
 

@@ -1,5 +1,5 @@
 from langchain_ollama import OllamaEmbeddings
-from settings import Settings
+from app.core.settings import Settings
 
 
 
