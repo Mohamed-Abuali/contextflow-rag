@@ -7,7 +7,11 @@ import { cn } from '@/lib/utils';
 
 import { Link } from 'react-router-dom';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  openSettings: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ openSettings }) => {
   const screenSize = useResponsive();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -34,9 +38,7 @@ const Sidebar: React.FC = () => {
       <div className="p-4 flex justify-between items-center border-b border-apple-border">
         <h1 className="text-lg font-semibold text-apple-text">RAG AI Chat</h1>
         <div className="flex items-center gap-2">
-          <Link to="/settings">
-            <Button variant="outline" size="sm">Settings</Button>
-          </Link>
+          <Button variant="outline" size="sm" onClick={openSettings}>Settings</Button>
           <Button variant="outline" size="sm">New Chat</Button>
           {screenSize === 'mobile' && (
             <Button

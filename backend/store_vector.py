@@ -14,7 +14,6 @@ def get_vector_store() -> Chroma | None:
 
 def create_vector_store(document,chunk_size:int=500,chunk_overlap:int=50):
     
-
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
