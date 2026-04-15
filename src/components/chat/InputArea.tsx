@@ -107,6 +107,13 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSend();
+    }
+  };
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -138,6 +145,7 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
           className="pr-20 resize-none bg-transparent border-none focus:ring-0 text-base"
           rows={1}
           disabled={isSending}
+          onKeyDown={handleKeyDown}
         />
         <input
             type="file"
