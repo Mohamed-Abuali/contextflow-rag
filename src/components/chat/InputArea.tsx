@@ -8,11 +8,10 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import { Paperclip, Mic, File, Image as ImageIcon, X, Send, Loader } from 'lucide-react';
 
-interface InputAreaProps {
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-}
+import useChatStore from '@/hooks/useChatStore';
 
-const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
+const InputArea: React.FC = () => {
+  const { addMessage } = useChatStore();
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -78,7 +77,7 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
       content: message,
       timestamp: Date.now(),
     };
-    setMessages((prev) => [...prev, userMessage]);
+    addMessage(userMessage);
     setMessage('');
 
     try {
@@ -92,7 +91,7 @@ const InputArea: React.FC<InputAreaProps> = ({ setMessages }) => {
         content: response.content,
         timestamp: new Date(response.timestamp).getTime(),
       };
-      setMessages((prev) => [...prev, assistantMessage]);
+      addMessage(assistantMessage);
     } catch (error) {
       console.error('Failed to send message:', error);
       // Handle error state in UI

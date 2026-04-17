@@ -1,14 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.endpoints import chat, settings, upload
+from app.api.endpoints import chat, settings, upload, history_chat
 
 app = FastAPI()
 
 # CORS Middleware
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,3 +18,4 @@ app.add_middleware(
 app.include_router(chat.router)
 app.include_router(settings.router)
 app.include_router(upload.router)
+app.include_router(history_chat.router)

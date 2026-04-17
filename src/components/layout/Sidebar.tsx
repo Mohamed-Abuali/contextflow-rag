@@ -1,19 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
-
-import { Link } from 'react-router-dom';
+import { getChatHistory, createNewChat } from '@/lib/api/client';
+import ChatHistoryList from '@/components/chat/ChatHistoryList';
+import useChatStore from '@/hooks/useChatStore';
 
 interface SidebarProps {
   openSettings: () => void;
+  onChatSelect: (chatId: number) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ openSettings }) => {
+const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
+  const { messages, clearMessages } = useChatStore();
   const screenSize = useResponsive();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [chatHistory, setChatHistory] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const history = await getChatHistory();
+        setChatHistory(history);
+      } catch (err) {
+        setError('Failed to load chat history.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHistory();
+  }, []);
+
+  const handleNewChat = async () => {
+    if (messages.length === 0) return; // Don't save empty chats
+    try {
+      const chatToSave = {
+        content: messages.map(m => m.content),
+        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      };
+      const newChat = await createNewChat(chatToSave);
+      setChatHistory([newChat, ...chatHistory]);
+      clearMessages();
+      onChatSelect(newChat.id);
+    } catch (err) {
+      setError('Failed to save chat.');
+    }
+  };
 
   if (screenSize === 'mobile' && !isSidebarOpen) {
     return (
@@ -39,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings }) => {
         <h1 className="text-lg font-semibold text-apple-text">RAG AI Chat</h1>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={openSettings}>Settings</Button>
-          <Button variant="outline" size="sm">New Chat</Button>
+          <Button variant="outline" size="sm" onClick={handleNewChat}>New Chat</Button>
           {screenSize === 'mobile' && (
             <Button
               variant="outline"
@@ -51,10 +87,15 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings }) => {
           )}
         </div>
       </div>
-      <ScrollArea className="flex-1 p-4">
-        {/* Chat history will go here */}
-        <div className="text-apple-text-secondary">Chat history is empty</div>
-      </ScrollArea>
+      <div>
+        {isLoading ? (
+          <div className="p-4 text-sm text-gray-500">Loading...</div>
+        ) : error ? (
+          <div className="p-4 text-sm text-red-500">{error}</div>
+        ) : (
+          <ChatHistoryList history={chatHistory} onChatSelect={onChatSelect} />
+        )}
+      </div>
       <div className="p-4 border-t border-apple-border">
         <div className="flex items-center">
           <Avatar>

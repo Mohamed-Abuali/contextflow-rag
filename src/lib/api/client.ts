@@ -14,7 +14,22 @@ export const uploadFile = async (file: File) => {
   if (response.status !== 200) {
     throw new Error('File upload failed');
   }
+  return response.data;
+};
 
+export const getChatHistory = async () => {
+  const response = await axios.get(`${config.API_BASE}/history`);
+  if (response.status !== 200) {
+    throw new Error('Failed to fetch chat history');
+  }
+  return response.data.chats;
+};
+
+export const createNewChat = async (chat: any) => {
+  const response = await axios.post(`${config.API_BASE}/history`, chat);
+  if (response.status !== 200) {
+    throw new Error('Failed to create new chat');
+  }
   return response.data;
 };
 
@@ -37,4 +52,4 @@ export const sendChatMessage = async (
   }
 
   return response.data;
-};
+}
