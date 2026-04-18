@@ -9,9 +9,11 @@ import { cn } from '@/lib/utils';
 
 interface ChatAreaProps {
   messages: Message[];
+  isLoading: boolean;
+  error: string | null;
 }
 
-const ChatArea: React.FC<ChatAreaProps> = ({ messages }) => {
+const ChatArea: React.FC<ChatAreaProps> = ({ messages, isLoading, error }) => {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const screenSize = useResponsive();
@@ -47,7 +49,9 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages }) => {
           ))}
           <div ref={messageEndRef} />
         </div>
-        {messages.length === 0 && (
+        {isLoading && <div className="text-apple-text-secondary">Loading...</div>}
+        {error && <div className="text-red-500">{error}</div>}
+        {messages.length === 0 && !isLoading && !error && (
           <div className="text-apple-text-secondary">No messages yet</div>
         )}
       </ScrollArea>

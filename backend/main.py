@@ -4,7 +4,7 @@ from app.api.endpoints.settings import router as settings_router
 from app.api.endpoints.upload import router as upload_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.endpoints.history_chat import router as history_chat_router
-
+from app.api.endpoints.new_chat import router as new_chat_router
 import logging
 
 
@@ -27,6 +27,7 @@ app.include_router(chat_router)
 app.include_router(upload_router)
 app.include_router(settings_router)
 app.include_router(history_chat_router)
+app.include_router(new_chat_router)
 
 
 

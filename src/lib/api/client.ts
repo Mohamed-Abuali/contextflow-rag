@@ -14,7 +14,15 @@ export const uploadFile = async (file: File) => {
   if (response.status !== 200) {
     throw new Error('File upload failed');
   }
-  return response.data;
+}
+
+
+export const getChatById = async (chatId: number) => {
+  const response = await axios.get(`${config.API_BASE}/history/${chatId}`);
+  if (response.status !== 200) {
+    throw new Error('Failed to fetch chat');
+  }
+  return response.data.chat;
 };
 
 export const getChatHistory = async () => {
@@ -22,6 +30,7 @@ export const getChatHistory = async () => {
   if (response.status !== 200) {
     throw new Error('Failed to fetch chat history');
   }
+  console.log(response.data.ids);
   return response.data.chats;
 };
 

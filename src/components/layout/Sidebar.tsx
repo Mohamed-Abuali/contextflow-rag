@@ -87,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
           )}
         </div>
       </div>
-      <div>
+      <div className='overflow-y-scroll'>
         {isLoading ? (
           <div className="p-4 text-sm text-gray-500">Loading...</div>
         ) : error ? (
