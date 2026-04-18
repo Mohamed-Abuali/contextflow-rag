@@ -17,11 +17,12 @@ const useChatStore = create<ChatState>((set) => ({
   clearMessages: () => set({ messages: [] }),
   fetchChatById: async (chatId) => {
     const chat = await getChatById(chatId);
-    const messages = JSON.parse(chat.content).map((content: string, index: number) => ({
-      id: `${chat.id}-${index}`,
+    console.log(chat);
+    const messages = JSON.parse(chat[0].content).map((content: string, index: number) => ({
+      id: `${chat[0].id}-${index}`,
       role: index % 2 === 0 ? 'user' : 'assistant',
       content,
-      timestamp: new Date(chat.timestamp).getTime(),
+      timestamp: new Date(chat[0].timestamp).getTime(),
     }));
     set({ messages });
   },

@@ -14,14 +14,14 @@ const ShackPage: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<number | null>(null);
 
-  const handleChatSelect = async (chatId: number) => {
+const handleChatSelect = async (chatId: number) => {
     setIsLoading(true);
     setError(null);
     try {
       await fetchChatById(chatId);
       setCurrentChatId(chatId);
     } catch (err) {
-      setError('Failed to load chat.');
+      setError(`Failed to load chat ${chatId}. ${err}`);
     } finally {
       setIsLoading(false);
     }

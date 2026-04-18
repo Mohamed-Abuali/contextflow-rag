@@ -63,13 +63,14 @@ def insert_chat(chat: CHAT) -> dict:
 def get_all_chats() -> list:
     df = pd.read_sql_query("SELECT * FROM chats", engine)
     df['timestamp'] = pd.to_datetime(df['timestamp'])
+   
     return df.to_dict(orient='records')
 
 def get_chat_by_id(chat_id: int) -> dict:
     #with engine.connect() as conn:
        # chat_row = conn.execute(text(f"SELECT id, content, timestamp FROM chats WHERE id = {chat_id}")).fetchone()
     try:
-        df = pd.read_sql_query(f"SELECT * FROM chats WHERE chat_id = {chat_id}", engine)
+        df = pd.read_sql_query(f"SELECT * FROM chats WHERE id = {chat_id}", engine)
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         print(df)
         return df.to_dict(orient='records')
