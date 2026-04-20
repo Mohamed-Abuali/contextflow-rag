@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
       clearMessages();
       onChatSelect(newChat.id);
     } catch (err) {
-      setError('Failed to save chat.');
+      setError(`Failed to save chat. ${err}`);
     }
   };
 

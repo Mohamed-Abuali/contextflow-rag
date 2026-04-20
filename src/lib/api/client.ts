@@ -63,3 +63,10 @@ export const sendChatMessage = async (
 
   return response.data;
 }
+export const deleteChatById = async (chatId: number) => {
+  const response = await axios.delete(`${config.API_BASE}/history/${chatId}`);
+  if (response.status !== 200) {
+    throw new Error('Failed to delete chat');
+  }
+  return response.data;
+};

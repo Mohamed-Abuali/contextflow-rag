@@ -103,3 +103,9 @@ def insert_message(chat_id: int, sender: str, content: str) -> dict:
                 "timestamp": new_message.timestamp.isoformat()
             }
     return None
+
+
+def delete_chat_by_id(chat_id: int) -> bool:
+    with engine.begin() as conn:
+        result = conn.execute(text("DELETE FROM chats WHERE id = :chat_id"), {"chat_id": chat_id})
+        return result.rowcount > 0
