@@ -109,3 +109,17 @@ def delete_chat_by_id(chat_id: int) -> bool:
     with engine.begin() as conn:
         result = conn.execute(text("DELETE FROM chats WHERE id = :chat_id"), {"chat_id": chat_id})
         return result.rowcount > 0
+
+def update_chat_by_id(chat_id: int, chat: CHAT) -> dict:
+    serialized_content = json.dumps(chat.content)
+    with engine.begin() as conn:
+        result = conn.execute(text(
+            "UPDATE chats SET content = :content, timestamp = :timestamp WHERE id = :chat_id"
+        ), {
+            "content": serialized_content,
+            "timestamp": chat.timestamp,
+            "chat_id": chat_id
+        })
+        if result.rowcount > 0:
+            return get_chat_by_id(chat_id)
+    return None

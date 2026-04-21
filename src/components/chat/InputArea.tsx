@@ -6,7 +6,7 @@ import { uploadFile, sendChatMessage } from '@/lib/api/client';
 import { Message } from '@/types';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
-import { Paperclip, Mic, File, Image as ImageIcon, X, Send, Loader } from 'lucide-react';
+import { Paperclip, Mic, Image as ImageIcon, X, Send, Loader } from 'lucide-react';
 
 import useChatStore from '@/hooks/useChatStore';
 

@@ -37,7 +37,9 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
     fetchHistory();
   }, []);
 
-  const handleNewChat = async () => {
+  const handleDeleteChat = (chatId: number) => {
+    setChatHistory(chatHistory.filter(chat => chat.id !== chatId));
+  };
     if (messages.length === 0) return; // Don't save empty chats
     try {
       const chatToSave = {
@@ -83,6 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
         isLoading={isLoading}
         error={error}
         onChatSelect={onChatSelect} 
+        onDeleteChat={handleDeleteChat}
       />
       <UserProfile />
     </aside>

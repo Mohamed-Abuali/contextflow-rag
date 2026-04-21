@@ -10,15 +10,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from 'lucide-react'
-import { deleteChatById } from '@/lib/api/client';
+import { deleteChatById }import React from 'react';
+import { zota } from '@/lib/zota';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
 
 interface ChatHistoryItemProps {
-  chat: any; // Define a proper type for the chat object
+  chat: any; 
   onClick: () => void;
+  onDelete: (chatId: number) => void;
 }
 
 
-const ChatHistoryItem: React.FC<ChatHistoryItemProps> = ({ chat, onClick }) => {
+const ChatHistoryItem: React.FC<ChatHistoryItemProps> = ({ chat, onClick, onDelete }) => {
+  const handleItemClick = () => {
+    zota.set(chat.id);
+    onClick();
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await deleteChatById(chat.id);
+      onDelete(chat.id);
+    } catch (error) {
+      console.error("Failed to delete chat:", error);
+    }
+  };
   // Truncate content for display
   const truncatedContent = chat.content.length > 30 ? `${chat.content.substring(0, 30)}...` : chat.content;
 
@@ -37,7 +55,7 @@ const handleDelete = async () => {
   return (
     <div 
       className="p-2 my-1 flex justify-between items-center text-sm rounded-md cursor-pointer hover:bg-gray-200 transition-colors duration-200"
-      onClick={onClick}
+      onClick={handleItemClick}
     >
       <div className="flex flex-col justify-between items-start">
       <p className="font-medium text-gray-800">{truncatedContent}</p>

@@ -5,9 +5,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 interface ChatHistoryListProps {
   history: any[]; // Define a proper type for the history array
   onChatSelect: (chatId: number) => void;
+  onDeleteChat: (chatId: number) => void;
 }
 
-const ChatHistoryList: React.FC<ChatHistoryListProps> = ({ history, onChatSelect }) => {
+const ChatHistoryList: React.FC<ChatHistoryListProps> = ({ history, onChatSelect, onDeleteChat }) => {
   if (!history || history.length === 0) {
     return <div className="p-4 text-sm text-gray-500">No chat history found.</div>;
   }
@@ -18,7 +19,7 @@ const ChatHistoryList: React.FC<ChatHistoryListProps> = ({ history, onChatSelect
         <ChatHistoryItem 
           key={chat.id}
           chat={chat}
-          onClick={() => onChatSelect(chat.id)}
+          onDelete={onDeleteChat}
         />
       ))}
     </ScrollArea>
