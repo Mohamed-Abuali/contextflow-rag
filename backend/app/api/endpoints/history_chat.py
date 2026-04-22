@@ -29,9 +29,9 @@ async def delete_chat(chat_id: int):
     else:
         return {"error": "Chat not found"}
 @router.put("/history/{chat_id}")
-async def update_chat(chat_id: int, chat: CHAT):
-    updated_chat = update_chat_by_id(chat_id, chat)
+async def update_chat(chat_id: str, chat: CHAT):
+    updated_chat = update_chat_by_id(int(chat_id), chat)
     if updated_chat:
-        return updated_chat
+        return {"message": "Chat updated", "chat": updated_chat,status_code: 200}
     else:
-        return {"error": "Chat not found"}
+        return {"error": "Chat not found",status_code: 404}

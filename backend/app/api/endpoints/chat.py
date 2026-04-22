@@ -2,7 +2,7 @@ import logging
 import uuid
 from datetime import datetime
 from typing import Optional
-from backend.app.database.database_functions import update_chat_by_id
+from app.database.database_functions import update_chat_by_id
 from fastapi import APIRouter,HTTPException,File, UploadFile, Form
 from pydantic import BaseModel, Field
 from app.services.chain import build_chat_chain

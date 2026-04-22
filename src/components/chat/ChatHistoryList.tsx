@@ -19,6 +19,7 @@ const ChatHistoryList: React.FC<ChatHistoryListProps> = ({ history, onChatSelect
         <ChatHistoryItem 
           key={chat.id}
           chat={chat}
+          onClick={() => onChatSelect(chat.id)}
           onDelete={onDeleteChat}
         />
       ))}

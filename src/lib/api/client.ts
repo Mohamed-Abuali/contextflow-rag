@@ -46,10 +46,12 @@ export const createNewChat = async (chat: any) => {
 export const sendChatMessage = async (
   message: string,
   sessionId: string,
+  chatId: number | null
 ) => {
   const formData = new FormData();
   formData.append('message', message);
   formData.append('session_id', sessionId);
+  formData.append('chat_id', chatId?.toString() || '');
 
   const response = await axios.post(`${config.API_BASE}/chat`, formData, {
     headers: {

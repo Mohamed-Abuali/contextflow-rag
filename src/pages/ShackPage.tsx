@@ -8,7 +8,7 @@ import SettingsModal from '@/components/settings/SettingsModal';
 import useChatStore from '@/hooks/useChatStore';
 
 const ShackPage: React.FC = () => {
-  const { messages, fetchChatById } = useChatStore();
+  const { messages, fetchChatById, setChatId } = useChatStore();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -19,7 +19,7 @@ const handleChatSelect = async (chatId: number) => {
     setError(null);
     try {
       await fetchChatById(chatId);
-      setCurrentChatId(chatId);
+      setChatId(chatId);
     } catch (err) {
       setError(`Failed to load chat ${chatId}. ${err}`);
     } finally {

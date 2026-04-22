@@ -11,7 +11,7 @@ import { Paperclip, Mic, Image as ImageIcon, X, Send, Loader } from 'lucide-reac
 import useChatStore from '@/hooks/useChatStore';
 
 const InputArea: React.FC = () => {
-  const { addMessage } = useChatStore();
+  const { addMessage, chatId } = useChatStore();
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -84,6 +84,7 @@ const InputArea: React.FC = () => {
       const response = await sendChatMessage(
         message,
         sessionId,
+        chatId
       );
       const assistantMessage: Message = {
         id: response.id,

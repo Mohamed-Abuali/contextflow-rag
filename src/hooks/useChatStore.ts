@@ -4,13 +4,16 @@ import { getChatById } from '@/lib/api/client';
 
 interface ChatState {
   messages: Message[];
+  chatId: number | null;
   setMessages: (messages: Message[]) => void;
   addMessage: (message: Message) => void;
   clearMessages: () => void;
   fetchChatById: (chatId: number) => Promise<void>;
+  setChatId: (chatId: number | null) => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
+  chatId: null,
   messages: [],
   setMessages: (messages) => set({ messages }),
   addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
@@ -26,6 +29,7 @@ const useChatStore = create<ChatState>((set) => ({
     }));
     set({ messages });
   },
+  setChatId: (chatId) => set({ chatId }),
 }));
 
 export default useChatStore;

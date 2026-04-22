@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
     fetchHistory();
   }, []);
 
-  const handleDeleteChat = (chatId: number) => {
+const handleDeleteChat = async (chatId: number) => {
     setChatHistory(chatHistory.filter(chat => chat.id !== chatId));
   };
     if (messages.length === 0) return; // Don't save empty chats
@@ -53,19 +53,19 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
     } catch (err) {
       setError(`Failed to save chat. ${err}`);
     }
-  };
+};
 
   if (screenSize === 'mobile' && !isSidebarOpen) {
-    return (
-      <Button
-        variant="outline"
-        size="icon"
-        className="fixed top-4 left-4 z-50"
-        onClick={() => setIsSidebarOpen(true)}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </Button>
-    );
+        return (
+          <Button
+            variant="outline"
+            size="icon"
+            className="fixed top-4 left-4 z-50"
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </Button>
+        );
   }
 
   return (
