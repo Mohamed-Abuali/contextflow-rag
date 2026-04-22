@@ -40,6 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
 const handleDeleteChat = async (chatId: number) => {
     setChatHistory(chatHistory.filter(chat => chat.id !== chatId));
   };
+const handleNewChat = async () => {
     if (messages.length === 0) return; // Don't save empty chats
     try {
       const chatToSave = {
@@ -55,6 +56,7 @@ const handleDeleteChat = async (chatId: number) => {
     }
 };
 
+
   if (screenSize === 'mobile' && !isSidebarOpen) {
         return (
           <Button
@@ -68,7 +70,7 @@ const handleDeleteChat = async (chatId: number) => {
         );
   }
 
-  return (
+return (
     <aside
       className={cn(
         'fixed top-0 left-0 h-full bg-apple-surface/50 border-r border-apple-border glass flex flex-col z-40',
