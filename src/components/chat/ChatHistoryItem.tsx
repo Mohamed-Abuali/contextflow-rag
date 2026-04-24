@@ -1,19 +1,11 @@
-import React from 'react';
+
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+
 import { MoreHorizontal } from 'lucide-react'
-import { deleteChatById }import React from 'react';
-import { zota } from '@/lib/zota';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import React from 'react';
+import {deleteChatById} from '@/lib/api/client'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 
 interface ChatHistoryItemProps {
   chat: any; 
@@ -24,7 +16,7 @@ interface ChatHistoryItemProps {
 
 const ChatHistoryItem: React.FC<ChatHistoryItemProps> = ({ chat, onClick, onDelete }) => {
   const handleItemClick = () => {
-    zota.set(chat.id);
+   
     onClick();
   };
 
@@ -37,19 +29,40 @@ const ChatHistoryItem: React.FC<ChatHistoryItemProps> = ({ chat, onClick, onDele
       console.error("Failed to delete chat:", error);
     }
   };
-  // Truncate content for display
-  const truncatedContent = chat.content.length > 30 ? `${chat.content.substring(0, 30)}...` : chat.content;
+  // Handle content that could be string, array, or object
+  const formatContent = (content: any): string => {
+    if (typeof content === 'string') {
+      return content;
+    } else if (Array.isArray(content)) {
+      // If it's an array, join the items (handling both strings and objects)
+      return content.map(item => {
+        if (typeof item === 'string') return item;
+        if (typeof item === 'object' && item !== null) {
+          // Handle objects with sender/ai keys or other formats
+          return item.ai || item.sender || item.message || JSON.stringify(item);
+        }
+        return String(item);
+      }).join(' ');
+    } else if (typeof content === 'object' && content !== null) {
+      // If it's a single object, try to extract meaningful text
+      return content.ai || content.sender || content.message || JSON.stringify(content);
+    }
+    return String(content);
+  };
+
+  const displayContent = formatContent(chat.content);
+  const truncatedContent = displayContent.length > 30 ? `${displayContent.substring(0, 30)}...` : displayContent;
 
 
-const handleDelete = async () => {
-  try {
-    await deleteChatById(chat.id);
-    // Refresh chat history or update state as needed
-  } catch (error) {
-    console.error('Failed to delete chat:', error);
-    // Handle error state in UI
-  }
-};
+// const handleDelete = async () => {
+//   try {
+//     await deleteChatById(chat.id);
+//     // Refresh chat history or update state as needed
+//   } catch (error) {
+//     console.error('Failed to delete chat:', error);
+//     // Handle error state in UI
+//   }
+// };
 
 
   return (

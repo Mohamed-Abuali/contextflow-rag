@@ -1,15 +1,15 @@
 import logging
-import uuid
-from datetime import datetime
+
 from typing import Optional
 from app.database.database_functions import update_chat_by_id
 from fastapi import APIRouter,HTTPException,File, UploadFile, Form
-from pydantic import BaseModel, Field
+
 from app.services.chain import build_chat_chain
 from app.core.settings import Settings
 from langchain_core.output_parsers import StrOutputParser
-from app.tools.parsefile import extract_text_from_pdf
-from langchain_core.documents.base import Blob
+
+
+from app.core.settings import ResponseModel,MessageForm
 
 router = APIRouter()
 
@@ -17,34 +17,27 @@ logger = logging.getLogger(__name__)
 chat_chain = build_chat_chain()
 parser = StrOutputParser()
 
-class ResponseModel(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    content: str
-    timestamp: int = Field(default_factory=lambda: int(datetime.utcnow().timestamp()))
-    session_id:str
-    context_source:list[str] = []
-class MessageForm(BaseModel):
-    sender: str = Field(default="user")
-    AI: str = Field(default="AI")
+
 
 @router.post("/chat",response_model=ResponseModel)
 async def chat_endpoint(
     message: str = Form(...),
     session_id: str = Form("default_session"),
+    chat_id: int = Form(None)
 ):
     try:
         message_form = MessageForm()
-        input_message = message_form.content
-        message_form.content = message
+        message_form.sender = message
+        
 
         response = await chat_chain.ainvoke(
-            {Settings.input_key: input_message},
+            {Settings.input_key: message_form.sender},
             config={"configurable": {"session_id": session_id}},
         )
         source = [doc.metadata.get("source","unknown") for doc in response.get("context",[])]
         result = response.get("answer")
-        message_form.AI = result
-        update_chat_by_id(session_id,message_form)
+        message_form.ai = result
+        update_chat_by_id(chat_id,message_form)
         return ResponseModel(content=result,session_id=session_id,context_source=source)
     except Exception as e:
         logger.error(f"Error in chat_endpoint: {e}")

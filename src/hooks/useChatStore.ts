@@ -21,7 +21,26 @@ const useChatStore = create<ChatState>((set) => ({
   fetchChatById: async (chatId) => {
     const chat = await getChatById(chatId);
     console.log(chat);
-    const messages = JSON.parse(chat[0].content).map((content: string, index: number) => ({
+    
+    // Handle different content formats
+    let contentArray;
+    if (typeof chat[0].content === 'string') {
+      // If it's a string, try to parse it as JSON
+      try {
+        contentArray = JSON.parse(chat[0].content);
+      } catch {
+        // If JSON parsing fails, treat it as a single message
+        contentArray = [chat[0].content];
+      }
+    } else if (Array.isArray(chat[0].content)) {
+      // If it's already an array, use it directly
+      contentArray = chat[0].content;
+    } else {
+      // Fallback for other formats
+      contentArray = [String(chat[0].content)];
+    }
+    
+    const messages = contentArray.map((content: string, index: number) => ({
       id: `${chat[0].id}-${index}`,
       role: index % 2 === 0 ? 'user' : 'assistant',
       content,

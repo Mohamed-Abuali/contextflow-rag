@@ -1,74 +1,54 @@
 import axios from 'axios';
-import config from '@/lib/config';
+import { config } from '@/lib/api/config';
 
+const API_BASE_URL = 'http://localhost:8080/api';
+
+export const checkAndSaveChat = async (content: any) => {
+  const response = await axios.post(`${API_BASE_URL}/chats/check-and-save`, { content });
+  return response.data;
+};
+
+export const getChatHistory = async () => {
+  const response = await axios.get(`${API_BASE_URL}/chats`);
+  return response.data;
+};
+
+export const getChatById = async (chatId: number) => {
+  const response = await axios.get(`${API_BASE_URL}/chats/${chatId}`);
+  return response.data;
+};
+
+export const deleteChatById = async (chatId: number) => {
+  await axios.delete(`${API_BASE_URL}/chats/${chatId}`);
+};
+
+// Keep existing functions for now, but they will be deprecated
 export const uploadFile = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await axios.post(`${config.API_BASE}${config.UPLOAD_ENDPOINT}`, formData, {
+  const response = await axios.post(`http://localhost:8000/upload`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-
-  if (response.status !== 200) {
-    throw new Error('File upload failed');
-  }
-}
-
-
-export const getChatById = async (chatId: number) => {
-  const response = await axios.get(`${config.API_BASE}/history/${chatId}`);
-  console.log(response.data);
-  if (response.status !== 200) {
-    throw new Error(`Failed to fetch chat ${chatId} ${response.statusText} ${response.data}`);
-  }
-  return response.data.chat;
-};
-
-export const getChatHistory = async () => {
-  const response = await axios.get(`${config.API_BASE}/history`);
-  if (response.status !== 200) {
-    throw new Error('Failed to fetch chat history');
-  }
-  console.log(response.data.ids);
-  return response.data.chats;
+  return response.data;
 };
 
 export const createNewChat = async (chat: any) => {
-  const response = await axios.post(`${config.API_BASE}/history`, chat);
-  if (response.status !== 200) {
-    throw new Error('Failed to create new chat');
-  }
+  const response = await axios.post(`http://localhost:8000/history`, chat);
   return response.data;
 };
 
-export const sendChatMessage = async (
-  message: string,
-  sessionId: string,
-  chatId: number | null
-) => {
+export const sendMessage = async (message: string, chatId: number | null) => {
   const formData = new FormData();
   formData.append('message', message);
-  formData.append('session_id', sessionId);
   formData.append('chat_id', chatId?.toString() || '');
 
-  const response = await axios.post(`${config.API_BASE}/chat`, formData, {
+  const response = await axios.post(`http://localhost:8000/chat`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-
-  if (response.status !== 200) {
-    throw new Error('API request failed');
-  }
-
-  return response.data;
-}
-export const deleteChatById = async (chatId: number) => {
-  const response = await axios.delete(`${config.API_BASE}/history/${chatId}`);
-  if (response.status !== 200) {
-    throw new Error('Failed to delete chat');
-  }
   return response.data;
 };

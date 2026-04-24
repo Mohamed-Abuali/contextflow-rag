@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
-import { getChatHistory, createNewChat } from '@/lib/api/client';
+import { getChatHistory, checkAndSaveChat } from '@/lib/api/client';
 import useChatStore from '@/hooks/useChatStore';
 
 import SidebarHeader from './SidebarHeader';
@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
   const [chatHistory, setChatHistory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState('');
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -42,17 +43,22 @@ const handleDeleteChat = async (chatId: number) => {
   };
 const handleNewChat = async () => {
     if (messages.length === 0) return; // Don't save empty chats
+    setStatus('Saving...');
     try {
-      const chatToSave = {
-        content: messages.map(m => m.content),
-        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
-      };
-      const newChat = await createNewChat(chatToSave);
-      setChatHistory([newChat, ...chatHistory]);
+      const contentToSave = messages.map(m => ({ role: m.role, content: m.content }));
+      const response = await checkAndSaveChat(contentToSave);
+      setStatus(response.message);
+
+      // Refresh history
+      const history = await getChatHistory();
+      setChatHistory(history);
+
       clearMessages();
-      onChatSelect(newChat.id);
+      onChatSelect(response.chat.id);
     } catch (err) {
-      setError(`Failed to save chat. ${err}`);
+      const error = err as Error;
+      setError(`Failed to save chat: ${error.message}`);
+      setStatus('Error');
     }
 };
 
@@ -81,6 +87,7 @@ return (
         openSettings={openSettings} 
         onNewChat={handleNewChat} 
         onClose={() => setIsSidebarOpen(false)} 
+        status={status}
       />
       <ChatHistory 
         history={chatHistory}

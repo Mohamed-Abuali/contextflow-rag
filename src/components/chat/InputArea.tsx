@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useChatSession } from '@/hooks/useChatSession';
-import { uploadFile, sendChatMessage } from '@/lib/api/client';
+import { uploadFile, sendMessage } from '@/lib/api/client';
 import { Message } from '@/types';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
@@ -71,7 +71,7 @@ const InputArea: React.FC = () => {
       }
     }
 
-    const userMessage: Message = {
+const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
       content: message,
@@ -81,16 +81,17 @@ const InputArea: React.FC = () => {
     setMessage('');
 
     try {
-      const response = await sendChatMessage(
-        message,
-        sessionId,
-        chatId
-      );
+      // const response = await sendMessage(
+      //   message,
+      //   chatId
+      // );
+
+      // Mock assistant response
       const assistantMessage: Message = {
-        id: response.id,
+        id: Date.now().toString() + '-assistant',
         role: 'assistant',
-        content: response.content,
-        timestamp: new Date(response.timestamp).getTime(),
+        content: 'This is a mock response from the assistant.',
+        timestamp: Date.now(),
       };
       addMessage(assistantMessage);
     } catch (error) {
