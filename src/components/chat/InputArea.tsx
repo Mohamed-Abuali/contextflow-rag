@@ -81,17 +81,15 @@ const userMessage: Message = {
     setMessage('');
 
     try {
-      // const response = await sendMessage(
-      //   message,
-      //   chatId
-      // );
-
-      // Mock assistant response
+      const response = await sendMessage(
+        message,
+        chatId
+      );
       const assistantMessage: Message = {
-        id: Date.now().toString() + '-assistant',
+        id: response.id,
         role: 'assistant',
-        content: 'This is a mock response from the assistant.',
-        timestamp: Date.now(),
+        content: response.content,
+        timestamp: new Date(response.timestamp).getTime(),
       };
       addMessage(assistantMessage);
     } catch (error) {

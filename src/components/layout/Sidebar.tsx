@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
-import { getChatHistory, checkAndSaveChat } from '@/lib/api/client';
+import { getChatHistory, checkAndSaveChat,createNewChat } from '@/lib/api/client';
 import useChatStore from '@/hooks/useChatStore';
 
 import SidebarHeader from './SidebarHeader';
@@ -46,7 +46,7 @@ const handleNewChat = async () => {
     setStatus('Saving...');
     try {
       const contentToSave = messages.map(m => ({ role: m.role, content: m.content }));
-      const response = await checkAndSaveChat(contentToSave);
+      const response = await createNewChat(contentToSave);
       setStatus(response.message);
 
       // Refresh history

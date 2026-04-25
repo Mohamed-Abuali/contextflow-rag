@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { config } from '@/lib/api/config';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
 export const checkAndSaveChat = async (content: any) => {
   const response = await axios.post(`${API_BASE_URL}/chats/check-and-save`, { content });
@@ -36,16 +36,16 @@ export const uploadFile = async (file: File) => {
 };
 
 export const createNewChat = async (chat: any) => {
-  const response = await axios.post(`http://localhost:8000/history`, chat);
+  const response = await axios.post(`${API_BASE_URL}/history`, chat);
   return response.data;
 };
 
-export const sendMessage = async (message: string, chatId: number | null) => {
+export const sendMessage = async (message: string, chatId?: number | null) => {
   const formData = new FormData();
   formData.append('message', message);
   formData.append('chat_id', chatId?.toString() || '');
 
-  const response = await axios.post(`http://localhost:8000/chat`, formData, {
+  const response = await axios.post(`${API_BASE_URL}/chat`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
