@@ -22,22 +22,21 @@ parser = StrOutputParser()
 @router.post("/chat",response_model=ResponseModel)
 async def chat_endpoint(
     message: str = Form(...),
-    session_id: str = Form("default_session"),
+    role: str = Form(...),
     chat_id: int = Form(None)
 ):
     try:
         message_form = MessageForm()
         message_form.sender = message
-        
+        insert_message(Message(content=[message],role=role,chat_id=chat_id,timestamp=dt.datetime.now()))
 
         response = await chat_chain.ainvoke(
-            {Settings.input_key: message_form.sender},
+            {Settings.input_key: message},
             config={"configurable": {"session_id": session_id}},
         )
         source = [doc.metadata.get("source","unknown") for doc in response.get("context",[])]
         result = response.get("answer")
-        message_form.ai = result
-        update_chat_by_id(chat_id,message_form)
+        insert_message(Message(content=[result],role=role,chat_id=chat_id,timestamp=dt.datetime.now()))
         return ResponseModel(content=result,session_id=session_id,context_source=source)
     except Exception as e:
         logger.error(f"Error in chat_endpoint: {e}")
