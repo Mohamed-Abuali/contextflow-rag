@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { config } from '@/lib/api/config';
+import { Message } from '@/types';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -40,10 +41,11 @@ export const createNewChat = async (chat: any) => {
   return response.data;
 };
 
-export const sendMessage = async (message: string, chatId?: number | null) => {
+export const sendMessage = async ({content, role, id,timestamp, metadata}:Message) => {
   const formData = new FormData();
-  formData.append('message', message);
-  formData.append('chat_id', chatId?.toString() || '');
+  formData.append('message', content);
+  formData.append('chat_id', id?.toString() || '');
+  formData.append('role', role || 'user');
 
   const response = await axios.post(`${API_BASE_URL}/chat`, formData, {
     headers: {
