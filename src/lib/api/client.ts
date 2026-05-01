@@ -41,7 +41,7 @@ export const createNewChat = async (chat: any) => {
   return response.data;
 };
 
-export const sendMessage = async ({content, role, id,timestamp, metadata}:Message) => {
+export const sendMessage = async ({content, role, id}:Message) => {
   const formData = new FormData();
   formData.append('message', content);
   formData.append('chat_id', id?.toString() || '');

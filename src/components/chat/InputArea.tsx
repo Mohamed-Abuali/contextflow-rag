@@ -81,10 +81,11 @@ const userMessage: Message = {
     setMessage('');
 
     try {
-      const response = await sendMessage(
-        message,
-        chatId
-      );
+      const response = await sendMessage({
+        content:message,
+        id:chatId.toString() || '',
+        role:'user',
+      })
       const assistantMessage: Message = {
         id: response.id,
         role: 'assistant',
