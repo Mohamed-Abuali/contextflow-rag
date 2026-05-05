@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, HTTPException
-from app.database.database_functions import get_all_chats, get_chat_by_id, insert_chat, CHAT, delete_chat_by_id, update_chat_by_id
+from app.core.settings import MessageForm
+from app.database.database_functions import get_all_chats, get_chat_by_id, insert_chat, delete_chat_by_id
 
 router = APIRouter()
 
@@ -17,7 +18,7 @@ async def get_chat(chat_id: int):
         return {"error": "Chat not found"}
 
 @router.post("/history", response_model=dict)
-async def post_chat(chat: CHAT):
+async def post_chat(chat: MessageForm):
     new_chat = insert_chat(chat)
     if new_chat:
         return new_chat
@@ -29,8 +30,8 @@ async def delete_chat(chat_id: int):
     else:
         return {"error": "Chat not found"}
 @router.put("/history/{chat_id}")
-async def update_chat(chat_id: str, chat: CHAT):
-    updated_chat = update_chat_by_id(int(chat_id), chat)
+async def update_chat(chat_id: str, chat: MessageForm):
+    updated_chat = insert_chat(int(chat_id), chat)
     if updated_chat:
         return {"message": "Chat updated", "chat": updated_chat,status_code: 200}
     else:

@@ -1,7 +1,7 @@
 import logging
 
 from typing import Optional
-from app.database.database_functions import update_chat_by_id
+from app.database.database_functions import insert_message
 from fastapi import APIRouter,HTTPException,File, UploadFile, Form
 
 from app.services.chain import build_chat_chain
