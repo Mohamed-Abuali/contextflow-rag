@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 
 interface StreamingTextProps {
-  text: any; // Allow any type to handle different content formats
+  text: string;
 }
 
 const StreamingText: React.FC<StreamingTextProps> = ({ text }) => {
@@ -10,9 +10,7 @@ const StreamingText: React.FC<StreamingTextProps> = ({ text }) => {
 
   useEffect(() => {
     if (textRef.current) {
-      // Ensure text is a string before splitting
-      const displayText = typeof text === 'string' ? text : String(text);
-      const words = displayText.split(' ');
+      const words = text.split(' ');
       textRef.current.innerHTML = words.map(word => `<span>${word}</span>`).join(' ');
 
       const spans = textRef.current.querySelectorAll('span');

@@ -6,17 +6,15 @@ interface SidebarHeaderProps {
   openSettings: () => void;
   onNewChat: () => void;
   onClose: () => void;
-  status: string;
 }
 
-const SidebarHeader: React.FC<SidebarHeaderProps> = ({ openSettings, onNewChat, onClose, status }) => {
+const SidebarHeader: React.FC<SidebarHeaderProps> = ({ openSettings, onNewChat, onClose }) => {
   const screenSize = useResponsive();
 
   return (
     <div className="p-4 flex justify-between items-center border-b border-apple-border">
       <h1 className="text-lg font-semibold text-apple-text">RAG AI Chat</h1>
       <div className="flex items-center gap-2">
-        {status && <span className="text-sm text-gray-500">{status}</span>}
         <Button variant="outline" size="sm" onClick={openSettings}>Settings</Button>
         <Button variant="outline" size="sm" onClick={onNewChat}>New Chat</Button>
         {screenSize === 'mobile' && (

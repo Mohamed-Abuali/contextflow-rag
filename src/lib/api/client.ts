@@ -41,10 +41,12 @@ export const createNewChat = async (chat: any) => {
   return response.data;
 };
 
-export const sendMessage = async ({content, role, id}:Message) => {
+export const sendMessage = async ({content, role, id}: { content: string, role: string, id: number | null }) => {
   const formData = new FormData();
   formData.append('message', content);
-  formData.append('chat_id', id?.toString() || '');
+  if (id !== null) {
+    formData.append('chat_id', String(id));
+  }
   formData.append('role', role || 'user');
 
   const response = await axios.post(`${API_BASE_URL}/chat`, formData, {

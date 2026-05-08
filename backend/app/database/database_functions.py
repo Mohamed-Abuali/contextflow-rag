@@ -14,7 +14,7 @@ class Message(BaseModel):
     chat_id: int
     timestamp: dt.datetime
 
-database_path = os.path.join(os.path.dirname(__file__), 'RAG_database.db')
+database_path = os.path.join(os.path.dirname(__file__), 'RAG_DB.db')
 
 engine = create_engine(f'sqlite:///{database_path}')
 
@@ -127,7 +127,7 @@ def insert_message(message:Message) -> dict:
                 "chat_id": new_message.chat_id,
                 "content": new_message.content,
                 "role": new_message.role,
-                "timestamp": new_message.timestamp.isoformat()
+                "timestamp": new_message.timestamp.isoformat().toString()
             }
     return None
 

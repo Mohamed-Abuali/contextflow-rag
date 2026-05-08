@@ -71,8 +71,8 @@ const InputArea: React.FC = () => {
       }
     }
 
-const userMessage: Message = {
-      id: Date.now().toString(),
+    const userMessage: Message = {
+      id: chatId ? String(chatId) : Date.now().toString(),
       role: 'user',
       content: message,
       timestamp: Date.now(),
@@ -81,11 +81,7 @@ const userMessage: Message = {
     setMessage('');
 
     try {
-      const response = await sendMessage({
-        content:message,
-        id:chatId.toString() || '',
-        role:'user',
-      })
+      const response = await sendMessage(userMessage);
       const assistantMessage: Message = {
         id: response.id,
         role: 'assistant',

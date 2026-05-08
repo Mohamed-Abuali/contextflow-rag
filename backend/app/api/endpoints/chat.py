@@ -1,7 +1,8 @@
 import logging
+import datetime as dt
 
 from typing import Optional
-from app.database.database_functions import insert_message
+from app.database.database_functions import insert_message, Message
 from fastapi import APIRouter,HTTPException,File, UploadFile, Form
 
 from app.services.chain import build_chat_chain
