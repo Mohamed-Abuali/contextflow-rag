@@ -127,7 +127,7 @@ def insert_message(message:Message) -> dict:
                 "chat_id": new_message.chat_id,
                 "content": new_message.content,
                 "role": new_message.role,
-                "timestamp": new_message.timestamp.isoformat().toString()
+                "timestamp": str(new_message.timestamp) if hasattr(new_message.timestamp, 'isoformat') else new_message.timestamp
             }
     return None
 
