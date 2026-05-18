@@ -1,0 +1,21 @@
+# Deployment Readiness
+
+- **What is needed before production:**
+  - A production-ready database (e.g., PostgreSQL).
+  - A dedicated vector database (e.g., Pinecone, Weaviate).
+  - A production-ready web server (e.g., Gunicorn).
+  - A production-ready frontend build.
+- **Missing environment configs:**
+  - A `.env` file for the frontend.
+  - A more comprehensive `.env` file for the backend, including database credentials and other secrets.
+- **Security improvements:**
+  - Implement user authentication and authorization.
+  - Fix SQL injection vulnerabilities.
+  - Configure CORS to only allow the frontend URL.
+  - Use a secret management system to store secrets.
+- **CI/CD suggestions:**
+  - Use GitHub Actions to automate testing and deployment.
+  - Use Docker to containerize the frontend and backend applications.
+- **Monitoring/logging needs:**
+  - Use a logging library to log important events and errors.
+  - Use a monitoring tool to track application health and performance.

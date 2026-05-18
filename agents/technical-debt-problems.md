@@ -1,0 +1,27 @@
+# Technical Debt & Problems
+
+- **Bad Patterns:**
+  - Inconsistent API routing.
+  - Use of pandas for single record retrieval in `database_functions.py`.
+  - Lack of a clear service layer in the backend.
+- **Duplicate Logic:**
+  - Overlapping functionality in `chat.py`, `history_chat.py`, and `new_chat.py`.
+- **Unsafe Code:**
+  - SQL injection vulnerabilities due to the use of f-strings in database queries.
+  - Lack of input validation in some API endpoints.
+- **Performance Bottlenecks:**
+  - Reading the entire chat history into memory on the frontend.
+  - The use of pandas for database operations can be slow.
+- **Security Issues:**
+  - No user authentication or authorization.
+  - Potential for SQL injection.
+  - CORS is configured to allow all origins.
+- **Missing Tests:**
+  - There are no tests for the frontend or backend.
+- **Type Issues:**
+  - The frontend has some `any` types that should be replaced with more specific types.
+  - The backend has some missing type hints.
+- **Scalability Concerns:**
+  - The application is not designed to handle a large number of users or a large amount of data.
+  - The use of a single SQLite database for both chat history and the vector store is not scalable.
+- **`ts-backend` folder:** The `ts-backend` folder is a remnant of a previous attempt to build the backend in TypeScript and should be removed.
