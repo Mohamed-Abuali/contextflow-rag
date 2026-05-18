@@ -8,3 +8,9 @@ langchain-ollama
 python-dotenv
 lark
 python-multipart
+sqlalchemy
+alembic
+passlib[bcrypt]
+python-jose[cryptography]
+python-dotenv
+chromadb
