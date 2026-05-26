@@ -1,54 +1,45 @@
 import { create } from 'zustand';
 import { Message } from '@/types';
-import { getChatById } from '@/lib/api/client';
+import { getChatHistory } from '@/lib/api/client';
 
 interface ChatState {
   messages: Message[];
   chatId: number | null;
+  isLoading: boolean;
   setMessages: (messages: Message[]) => void;
   addMessage: (message: Message) => void;
   clearMessages: () => void;
-  fetchChatById: (chatId: number) => Promise<void>;
+  fetchChatHistory: (chatId: number, limit: number, offset: number) => Promise<void>;
   setChatId: (chatId: number | null) => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const useChatStore = create<ChatState>((set) => ({
   chatId: null,
   messages: [],
+  isLoading: false,
   setMessages: (messages) => set({ messages }),
   addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
   clearMessages: () => set({ messages: [] }),
-  fetchChatById: async (chatId) => {
-    const chat = await getChatById(chatId);
-    console.log(chat);
-    
-    // Handle different content formats
-    let contentArray;
-    if (typeof chat[0].content === 'string') {
-      // If it's a string, try to parse it as JSON
-      try {
-        contentArray = JSON.parse(chat[0].content);
-      } catch {
-        // If JSON parsing fails, treat it as a single message
-        contentArray = [chat[0].content];
-      }
-    } else if (Array.isArray(chat[0].content)) {
-      // If it's already an array, use it directly
-      contentArray = chat[0].content;
-    } else {
-      // Fallback for other formats
-      contentArray = [String(chat[0].content)];
+  fetchChatHistory: async (chatId, limit, offset) => {
+    set({ isLoading: true });
+    try {
+      const history = await getChatHistory(chatId, limit, offset);
+      const newMessages = history.map((msg: any) => ({
+        id: msg.id,
+        role: msg.role,
+        content: msg.content,
+        timestamp: new Date(msg.created_at).getTime(),
+      }));
+      set((state) => ({ messages: [...newMessages, ...state.messages] }));
+    } catch (error) {
+      console.error("Failed to fetch chat history:", error);
+    } finally {
+      set({ isLoading: false });
     }
-    
-    const messages = contentArray.map((content: string, index: number) => ({
-      id: `${chat[0].id}-${index}`,
-      role: index % 2 === 0 ? 'user' : 'assistant',
-      content,
-      timestamp: new Date(chat[0].timestamp).getTime(),
-    }));
-    set({ messages });
   },
   setChatId: (chatId) => set({ chatId }),
+  setIsLoading: (isLoading) => set({ isLoading }),
 }));
 
 export default useChatStore;

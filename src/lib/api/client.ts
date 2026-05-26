@@ -9,8 +9,12 @@ export const checkAndSaveChat = async (content: any) => {
   return response.data;
 };
 
-export const getChatHistory = async () => {
-  const response = await axios.get(`${API_BASE_URL}/chats`);
+export const getChatHistory = async (conversationId: number, limit: number, offset: number) => {
+  const response = await axios.get(`${API_BASE_URL}/chat/${conversationId}?limit=${limit}&offset=${offset}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`
+    }
+  });
   return response.data;
 };
 
