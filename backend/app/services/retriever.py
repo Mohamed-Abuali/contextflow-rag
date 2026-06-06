@@ -1,4 +1,6 @@
-from store_vector import get_vector_store
+"""Retriever using the persistent vector store."""
+from app.services.vector_store import get_vector_store
+
 
 def get_retriever():
     vector_store = get_vector_store()

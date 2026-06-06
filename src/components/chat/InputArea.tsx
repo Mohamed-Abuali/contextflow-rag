@@ -2,23 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useChatSession } from '@/hooks/useChatSession';
-import { uploadFile, sendMessage } from '@/lib/api/client';
-import { Message } from '@/types';
+import { uploadFile } from '@/lib/api/client';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
-import { Paperclip, Mic, Image as ImageIcon, X, Send, Loader } from 'lucide-react';
+import { Paperclip, Mic, X, Send, Loader, Square } from 'lucide-react';
 
 import useChatStore from '@/hooks/useChatStore';
 
 const InputArea: React.FC = () => {
-  const { addMessage, chatId } = useChatStore();
+  const { sendStreamingMessage, cancelStreaming, isStreaming } = useChatStore();
   const [message, setMessage] = useState('');
-  const [isSending, setIsSending] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
-  const { sessionId } = useChatSession();
+  useChatSession();
   const screenSize = useResponsive();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,18 +50,14 @@ const InputArea: React.FC = () => {
 
   const handleSend = async () => {
     if (message.trim() === '' && !selectedFile) return;
+    if (isStreaming) return;
 
-    setIsSending(true);
     if (selectedFile) {
       try {
         setIsUploading(true);
-        const uploadResponse = await uploadFile(selectedFile);
-        // You might want to include the file URL or ID in the message
-        // For example: message = `${message} (Uploaded file: ${uploadResponse.file_url})`
+        await uploadFile(selectedFile);
       } catch (error) {
         console.error('Failed to upload file:', error);
-        // Handle error state in UI
-        setIsSending(false);
         setIsUploading(false);
         return;
       } finally {
@@ -71,35 +65,18 @@ const InputArea: React.FC = () => {
       }
     }
 
-    const userMessage: Message = {
-      id: chatId ? String(chatId) : Date.now().toString(),
-      role: 'user',
-      content: message,
-      timestamp: Date.now(),
-    };
-    addMessage(userMessage);
+    const outgoing = message;
     setMessage('');
+    setSelectedFile(null);
+    setUploadProgress(0);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
 
     try {
-      const response = await sendMessage(userMessage);
-      const assistantMessage: Message = {
-        id: response.id,
-        role: 'assistant',
-        content: response.content,
-        timestamp: new Date(response.timestamp).getTime(),
-      };
-      addMessage(assistantMessage);
+      await sendStreamingMessage(outgoing);
     } catch (error) {
-      console.error('Failed to send message:', error);
-      // Handle error state in UI
-    } finally {
-      setIsSending(false);
-      setIsUploading(false);
-      setSelectedFile(null);
-      setUploadProgress(0);
-       if(fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+      console.error('Failed to stream message:', error);
     }
   };
 
@@ -140,7 +117,7 @@ const InputArea: React.FC = () => {
           placeholder="Ask anything, @models, /prompts ..."
           className="pr-20 resize-none bg-transparent border-none focus:ring-0 text-base"
           rows={1}
-          disabled={isSending}
+          disabled={isStreaming || isUploading}
           onKeyDown={handleKeyDown}
         />
         <input
@@ -157,11 +134,23 @@ const InputArea: React.FC = () => {
           <Button variant="ghost" size="icon">
             <Mic className="h-5 w-5" />
           </Button>
-          <Button onClick={handleSend} disabled={isSending || (message.trim() === '' && !selectedFile)} className=" group hover:bg-black text-white  w-10 h-10">
-            {isSending ? <Loader className="animate-spin text-black" /> : 
-              <Send className=" text-black group-hover:text-white" />
-         }
-          </Button>
+          {isStreaming ? (
+            <Button onClick={cancelStreaming} className="group hover:bg-black text-white w-10 h-10">
+              <Square className="text-black group-hover:text-white" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSend}
+              disabled={isUploading || (message.trim() === '' && !selectedFile)}
+              className="group hover:bg-black text-white w-10 h-10"
+            >
+              {isUploading ? (
+                <Loader className="animate-spin text-black" />
+              ) : (
+                <Send className="text-black group-hover:text-white" />
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </div>

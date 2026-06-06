@@ -48,3 +48,17 @@ class Message(Base):
     
     def __repr__(self):
         return f"<Message(id={self.id}, chat_id={self.chat_id}, role='{self.role}')>"
+
+class RevokedToken(Base):
+    """Stores revoked JWT identifiers (jti) for blocklist validation."""
+    __tablename__ = "revoked_tokens"
+
+    id = Column(Integer, primary_key=True, index=True)
+    jti = Column(String(64), unique=True, index=True, nullable=False)
+    user_id = Column(Integer, nullable=False, index=True)
+    token_type = Column(String(20), nullable=False)  # 'access' or 'refresh'
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    revoked_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    def __repr__(self):
+        return f"<RevokedToken(jti='{self.jti}', user_id={self.user_id})>"

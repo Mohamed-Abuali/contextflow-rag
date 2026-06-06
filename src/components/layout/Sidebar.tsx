@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useResponsive } from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
-import { getChatHistory, checkAndSaveChat,createNewChat } from '@/lib/api/client';
+import { listChats, createNewChat } from '@/lib/api/client';
 import useChatStore from '@/hooks/useChatStore';
 
 import SidebarHeader from './SidebarHeader';
@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSettings, onChatSelect }) => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const history = await getChatHistory();
+        const history = await listChats();
         setChatHistory(history);
       } catch (err) {
         setError('Failed to load chat history.');
@@ -50,7 +50,7 @@ const handleNewChat = async () => {
       setStatus(response.message);
 
       // Refresh history
-      const history = await getChatHistory();
+      const history = await listChats();
       setChatHistory(history);
 
       clearMessages();
